@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2DP Driver Project | Zxcvr</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #050508;
+            --bg-panel: #111116;
+            --neon-blue: #00f3ff;
+            --neon-purple: #bd00ff;
+            --neon-green: #39ff14;
+            --text-bright: #ffffff;
+            --text-dim: #aaaaaa;
+            --border-thick: 3px solid var(--neon-blue);
+            --shadow-hard: 6px 6px 0px var(--neon-purple);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth;}
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-bright);
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Layout Grid --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            grid-template-rows: auto auto 1fr auto;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+        }
+
+        /* --- Generic Card Style --- */
+        .panel {
+            background: var(--bg-panel);
+            border: var(--border-thick);
+            box-shadow: var(--shadow-hard);
+            padding: 20px;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .panel:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px var(--neon-green);
+            border-color: var(--neon-green);
+        }
+
+        /* --- Header Section --- */
+        .header {
+            grid-column: span 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-color: var(--neon-purple);
+        }
+
+        .header-title h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-link {
+            text-decoration: none;
+            padding: 10px 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid var(--text-bright);
+            color: var(--text-bright);
+            background: var(--bg-main);
+            transition: 0.3s;
+        }
+
+        .btn-link.rentry { background: var(--neon-purple); border: none; color: white;}
+        .btn-link.github { background: var(--text-bright); border: none; color: black;}
+        .btn-link:hover { transform: scale(1.05); filter: brightness(1.2); }
+
+        /* --- Sidebar ToC --- */
+        .sidebar-toc {
+            grid-row: span 2;
+            border-color: var(--neon-green);
+        }
+        .toc-list { list-style: none; margin-top: 15px; }
+        .toc-item {
+            padding: 12px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+        /* We link these to the Rentry page as anchor links */
+        .toc-item a { text-decoration: none; color: inherit; display: flex; gap: 10px; width: 100%;}
+        .toc-item:hover { background: var(--neon-blue); color: black; padding-left: 20px;}
+
+        /* --- Main Stage & Glimpse --- */
+        .main-stage {
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            /* Audio waveform background pattern */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="50" viewBox="0 0 200 50"><path d="M0 25 Q 5 10, 10 25 T 20 25 T 30 25 T 40 25 T 50 25 T 60 25 T 70 25 T 80 25 T 90 25 T 100 25 T 110 25 T 120 25 T 130 25 T 140 25 T 150 25 T 160 25 T 170 25 T 180 25 T 190 25 T 200 25" stroke="%2300f3ff33" fill="none"/></svg>');
+            background-size: 200px 50px;
+            animation: wave-scroll 10s linear infinite;
+        }
+
+        @keyframes wave-scroll { from {background-position: 0 0;} to {background-position: 200px 0;}}
+
+        #glimpse-trigger-container {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .glimpse-btn {
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            font-family: 'Syncopate', sans-serif;
+            background: transparent;
+            color: var(--neon-blue);
+            border: 4px solid var(--neon-blue);
+            box-shadow: 0 0 20px var(--neon-blue);
+            cursor: pointer;
+            transition: 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glimpse-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, var(--text-bright), transparent);
+            transition: 0.5s;
+        }
+        .glimpse-btn:hover::before { left: 100%; }
+        .glimpse-btn:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 40px var(--neon-blue); }
+
+        /* --- Terminal Animation Area --- */
+        #terminal-container {
+            display: none; /* Hidden by default */
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--neon-green);
+            overflow-y: auto;
+            border-top: 2px solid var(--neon-blue);
+        }
+        .log-entry { margin-bottom: 8px; opacity: 0; animation: fade-in 0.2s forwards;}
+        .log-warn { color: yellow; }
+        .log-success { color: var(--neon-blue); font-weight: bold; }
+        @keyframes fade-in { from {opacity: 0; transform: translateY(5px);} to {opacity: 1; transform: translateY(0);}}
+
+        /* --- Footer --- */
+        .footer {
+            grid-column: span 2;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            border-color: var(--text-dim);
+            box-shadow: none;
+        }
+        .footer span { color: var(--neon-blue); font-weight: bold;}
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; gap: 20px; text-align: center; }
+            .header-actions { width: 100%; justify-content: center; flex-wrap: wrap;}
+            .sidebar-toc { grid-row: auto; }
+            .header, .sidebar-toc, .main-stage, .footer { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-grid">
+        <header class="panel header">
+            <div class="header-title">
+                <h1>A2DP.AUDI0_HACK</h1>
+                <p><i data-lucide="headphones"></i> High-Fidelity Bluetooth Unlocker</p>
+            </div>
+            <div class="header-actions">
+                <a href="https://rentry.org/a2dp" target="_blank" class="btn-link rentry">
+                    <i data-lucide="file-text"></i> Official Guide
+                </a>
+                 <a href="https://github.com/zxcvresque/a2dp" target="_blank" class="btn-link github">
+                    <i data-lucide="github"></i> Repo
+                </a>
+            </div>
+        </header>
+
+        <aside class="panel sidebar-toc">
+            <h3><i data-lucide="list-music"></i> TABLE_OF_CONTENTS</h3>
+            <ul class="toc-list">
+                <li class="toc-item"><a href="https://rentry.org/a2dp#codec-comparison" target="_blank">📊 Codec Comparison</a></li>
+                <li class="toc-item"><a href="https://rentry.org/a2dp#cracked-version-features" target="_blank">✨ Cracked Features</a></li>
+                <li class="toc-item"><a href="https://rentry.org/a2dp#installation-instructions" target="_blank">📝 Installation Instructions</a></li>
+                <li class="toc-item"><a href="https://rentry.org/a2dp#basic-fine-tuning" target="_blank">🛠️ Basic Fine-Tuning</a></li>
+                <li class="toc-item"><a href="https://rentry.org/a2dp#read-more-resources" target="_blank">📚 Read More & Resources</a></li>
+                <li class="toc-item" style="border-color: var(--neon-blue);"><a href="https://rentry.org/a2dp#downloads" target="_blank">💾 DOWNLOADS</a></li>
+            </ul>
+        </aside>
+
+        <main class="panel main-stage">
+            <div id="glimpse-trigger-container">
+                <i data-lucide="cpu" size="64" color="var(--neon-blue)" style="margin-bottom: 20px;"></i>
+                <h2>INITIATE SEQUENCE</h2>
+                <p style="margin-bottom: 30px; color: var(--text-dim);">Click below to glimpse the patching process.</p>
+                <button class="glimpse-btn" onclick="runGlimpseSequence()">
+                    [ EXECUTE_GLIMPSE ]
+                </button>
+            </div>
+
+            <div id="terminal-container">
+                <div style="border-bottom: 1px dashed #333; padding-bottom: 10px; margin-bottom: 10px;">
+                    HEADLESS_CLIENT v1.6.0.1 // MODE: KERNEL_INTERCEPT
+                </div>
+                <div id="terminal-output"></div>
+            </div>
+        </main>
+
+        <footer class="panel footer">
+            <p>Project maintained by <span>Zxcvr</span>. Use tools at your own risk. | KERNEL_ID: 0xFF45A2DP</p>
+        </footer>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function runGlimpseSequence() {
+            const trigger = document.getElementById('glimpse-trigger-container');
+            const terminal = document.getElementById('terminal-container');
+            const output = document.getElementById('terminal-output');
+
+            // Hide trigger button, show terminal
+            trigger.style.display = 'none';
+            terminal.style.display = 'block';
+
+            // The Nerdy/Music themed logs
+            const logs = [
+                "[INIT] Mounting virtual audio chassis...",
+                "[SCAN] Searching for 'ntoskrnl.exe' in System32...",
+                "[AUDIO] Checking current Bluetooth stack: MSFT_STOCK (Low Quality detected)",
+                "[WARN] Windows Driver Signature Enforcement is ACTIVE.",
+                "[EXEC] Injecting DSE-Patcher into memory space...",
+                "--------------------------------------------------",
+                "PATCHING CiInitialize() address: 0xFFFFF80062...",
+                "OVERRIDE g_CiOptions value: 0x0 -> 0x1 (TEST_MODE)",
+                "--------------------------------------------------",
+                "[SUCCESS] KERNEL SECURITY BYPASSED.",
+                "[LOAD] Loading unsigned driver: Alternative.A2DP.sys",
+                "[HANDSHAKE] Negotiating codec with peripheral...",
+                "> Trying aptX-HD... FAILED (Device unsupported)",
+                "> Trying LDAC... SUCCESS (990kbps negotiated)",
+                "[AUDIO_ENG] Sample rate locked: 96kHz / 24-bit depth.",
+                "[FINAL] HIGH-FIDELITY AUDIO PATH ESTABLISHED.",
+                "> READY FOR PLAYBACK."
+            ];
+
+            let i = 0;
+            function typeWriter() {
+                if (i < logs.length) {
+                    const div = document.createElement('div');
+                    div.classList.add('log-entry');
+                    
+                    // Add specific styling based on content
+                    if (logs[i].includes('[WARN]')) div.classList.add('log-warn');
+                    if (logs[i].includes('[SUCCESS]') || logs[i].includes('[FINAL]')) div.classList.add('log-success');
+                    
+                    div.textContent = logs[i];
+                    output.appendChild(div);
+                    // Auto scroll to bottom
+                    terminal.scrollTop = terminal.scrollHeight;
+                    i++;
+                    // Randomized typing speed for realism
+                    setTimeout(typeWriter, Math.random() * 150 + 50);
+                }
+            }
+            // Start the typing sequence
+            typeWriter();
+        }
+    </script>
+</body>
+</html>
