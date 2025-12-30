@@ -1,15 +1,18 @@
-# Alternative A2DP Driver for Windows
+
+# 🌐 **[Landing Page / Dashboard Website](zxcvresque.github.io/a2dp/)**
+
+## Alternative A2DP Driver for Windows
 
 This repository serves as a mirror and host for the **Alternative A2DP Driver (v1.6.0.1)** and the necessary **DSE Patcher** tools required for installation on modern Windows systems.
 
-## 🚀 Full Installation Guide
+### 🚀 Full Installation Guide
 For the complete, step-by-step walkthrough, troubleshooting, and community-sourced fixes, please visit our main documentation page:
 
 👉 **[https://rentry.org/a2dp](https://rentry.org/a2dp)**
 
 ---
 
-## 🛠 Project Workflow
+### 🛠 Project Workflow
 Because this driver is unsigned, the installation requires a specific sequence to bypass Windows Driver Signature Enforcement (DSE).
 
 ```mermaid
