@@ -63,7 +63,7 @@
 
       display: flex;
       justify-content: center;
-      align-items: flex-start; /* ✅ key change */
+      align-items: flex-start;
       padding: 24px 18px;
 
       padding-left: calc(18px + env(safe-area-inset-left));
@@ -232,7 +232,9 @@
     .btn-theme:hover { background: var(--accent-purple); color: white; border-color: white; }
     .btn-repo:hover { background: var(--accent-cyan); color: black; border-color: white; }
     .btn-guide:hover { background: var(--accent-yellow); color: black; border-color: white; text-decoration: none; }
-
+    .btn-repo:hover, .btn-guide:hover {
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.8);
+    }
 
     .sidebar h2 {
       font-size: 0.75rem;
@@ -299,25 +301,135 @@
       text-align: center;
     }
 
-    #run-trigger {
-      background: var(--accent-cyan);
-      color: black;
-      padding: 18px 36px;
-      border-radius: 16px;
-      font-weight: 800;
-      text-transform: uppercase;
-      border: none;
+    /* --- UPGRADED INITIALIZE BUTTON --- */
+    #run-trigger{
+      position: relative;
+      overflow: hidden;
+      border: 0;
       cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
-      display: inline-flex; align-items: center; gap: 12px;
-      transition: 0.3s;
-      min-height: 48px;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+
+      padding: 18px 28px;
+      border-radius: 18px;
+
+      font-weight: 900;
+      font-size: 0.95rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+
+      color: var(--accent-cyan);
+      background: rgba(0, 243, 255, 0.06);
+
+      box-shadow:
+        0 0 0 1px rgba(0,243,255,0.25),
+        0 10px 35px rgba(0,243,255,0.12);
+
+      transform: translateZ(0);
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      animation: btnPulse 2.6s ease-in-out infinite;
+      min-height: 52px;
     }
-    #run-trigger:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 4px; }
-    #run-trigger:hover { transform: scale(1.05); box-shadow: 0 0 35px rgba(0, 243, 255, 0.8); }
+
+    #run-trigger::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      padding: 1px;
+      border-radius: inherit;
+      background: linear-gradient(90deg,
+        rgba(0,243,255,0.95),
+        rgba(188,19,254,0.85),
+        rgba(255,77,109,0.85),
+        rgba(0,243,255,0.95)
+      );
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    #run-trigger::after{
+      content:"";
+      position:absolute;
+      top:-30%;
+      left:-60%;
+      width: 45%;
+      height: 160%;
+      transform: rotate(18deg);
+      background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255,255,255,0.22),
+        transparent
+      );
+      animation: btnSweep 1.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    #run-trigger .btn-icon{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(0,243,255,0.10);
+      box-shadow: inset 0 0 0 1px rgba(0,243,255,0.25);
+    }
+
+    #run-trigger .btn-text{
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    #run-trigger .btn-chip{
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: rgba(255,255,255,0.9);
+      background: rgba(188,19,254,0.18);
+      border: 1px solid rgba(188,19,254,0.35);
+    }
+
+    #run-trigger:hover{
+      transform: translateY(-1px) scale(1.03);
+      background: rgba(0,243,255,0.09);
+      box-shadow:
+        0 0 0 1px rgba(0,243,255,0.35),
+        0 0 28px rgba(0,243,255,0.18),
+        0 18px 55px rgba(0,243,255,0.14);
+    }
+
+    #run-trigger:active{
+      transform: translateY(0px) scale(1.01);
+    }
+
+    #run-trigger:focus-visible{
+      outline: 2px solid rgba(255,255,255,0.85);
+      outline-offset: 4px;
+    }
+
+    @keyframes btnSweep{
+      0%   { left: -60%; opacity: 0; }
+      25%  { opacity: 0.35; }
+      50%  { left: 120%; opacity: 0.25; }
+      100% { left: 120%; opacity: 0; }
+    }
+
+    @keyframes btnPulse{
+      0%,100% { box-shadow: 0 0 0 1px rgba(0,243,255,0.22), 0 10px 35px rgba(0,243,255,0.10); }
+      50%     { box-shadow: 0 0 0 1px rgba(0,243,255,0.38), 0 14px 45px rgba(0,243,255,0.16); }
+    }
 
     #terminal-box {
       display: none;
@@ -385,6 +497,8 @@
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
       #loader::after { display: none !important; }
+      #run-trigger { animation: none !important; }
+      #run-trigger::after { animation: none !important; }
     }
   </style>
 </head>
@@ -426,7 +540,7 @@
 
     <main class="glass-panel main-content">
       <h2 class="guide-title">🎧 Alternative A2DP Driver: Ultimate Audio Guide 🎵</h2>
-      <div class="os-tag"><i data-lucide="alert-circle"></i> WIN_NT_ENVIRONMENT_ONLY</div>
+      <div class="os-tag"><i data-lucide="alert-circle"></i> WINDOWS_ENVIRONMENT_ONLY</div>
 
       <div class="info-card">
         <h4><i data-lucide="help-circle"></i> What is A2DP?</h4>
@@ -446,7 +560,9 @@
 
       <div class="sequence-container">
         <button id="run-trigger" type="button" onclick="runSequence()">
-          <i data-lucide="cpu"></i> INITIALIZE SEQUENCE
+          <span class="btn-icon"><i data-lucide="cpu"></i></span>
+          <span class="btn-text">INITIALIZE SEQUENCE</span>
+         
         </button>
         <div id="terminal-box"></div>
       </div>
